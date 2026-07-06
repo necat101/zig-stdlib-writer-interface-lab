@@ -53,7 +53,7 @@ All expected artifacts are present in the repo root:
 | `generate_cases.py` produces `cases.json` | ✅ 51 cases |
 | Zig compiler discovered | ✅ zig 0.14.1 |
 | Zig harness compiles | ✅ `zig build-exe`, ReleaseSafe, 19.745s |
-| Zig harness runs | ✅ anytype / AnyWriter / GenericWriter / writeAll / fixed-buffer / ArrayList / fmt observations recorded |
+| Zig harness runs | ✅ anytype / AnyWriter / GenericWriter /<br>writeAll / fixed-buffer / ArrayList / fmt<br>observations OK |
 | `RESULTS.md` generated | ✅ with per-method tables + skip matrix |
 | `results_rows.csv` / `.json` generated | ✅ 348 rows |
 | No network during run | ✅ Except HN pre-read |

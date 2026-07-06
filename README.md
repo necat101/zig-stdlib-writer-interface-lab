@@ -1,34 +1,57 @@
 # zig-stdlib-writer-interface-lab
 
-Toy local correctness and safety lab about **Zig `std.io` writer interfaces** – driven by [HN thread 42849774: "In Zig, what's a writer?"](https://news.ycombinator.com/item?id=42849774).
+Toy local correctness and safety lab about **Zig `std.io` writer interfaces** – driven
+by [HN thread 42849774: "In Zig, what's a
+writer?"](https://news.ycombinator.com/item?id=42849774).
 
-The linked article explains `writer: anytype`, `std.io.AnyWriter`, and `std.io.GenericWriter`. The HN discussion broadens into documentation, implicit interfaces, Rust traits, Zig comptime, dynamic dispatch, interface ergonomics, performance pitfalls, function-pointer overhead, typed error sets, `anyerror`, JSON serialization, writer storage in structs, new/old Zig stdlib APIs, and whether the real problem is Zig, the stdlib writer design, or expecting a language without traits to look like one with traits.
+The linked article explains `writer: anytype`, `std.io.AnyWriter`, and
+`std.io.GenericWriter`. The HN discussion broadens into documentation, implicit
+interfaces, Rust traits, Zig comptime, dynamic dispatch, interface ergonomics,
+performance pitfalls, function-pointer overhead, typed error sets, `anyerror`, JSON
+serialization, writer storage in structs, new/old Zig stdlib APIs, and whether the real
+problem is Zig, the stdlib writer design, or expecting a language without traits to look
+like one with traits.
 
 ## Hacker News thread access
 
-The HN Firebase API CLI (`python3 ./hackernews get-item --id 42849774`) was used to read the linked HN thread before writing the sentiment summary below.
+The HN Firebase API CLI (`python3 ./hackernews get-item --id 42849774`) was used to read
+the linked HN thread before writing the sentiment summary below.
 
 - **Thread:** https://news.ycombinator.com/item?id=42849774
 - **Article:** https://www.openmymind.net/In-Zig-Whats-a-Writer/
-- **HN evidence:** [`hn_thread_evidence.md`](hn_thread_evidence.md), `hn_nodes_sanitized.json` (~50 KB, 77 nodes)
+- **HN evidence:** [`hn_thread_evidence.md`](hn_thread_evidence.md),
+  `hn_nodes_sanitized.json` (~50 KB, 77 nodes)
 
 ## What Hacker News users were actually debating
 
-HN commenters discussed Zig writer interface design far beyond the article. Paraphrased themes (not direct quotes):
+HN commenters discussed Zig writer interface design far beyond the article. Paraphrased
+themes (not direct quotes):
 
 ### writer: anytype
 
-- **"anytype is a documentation black hole"** – Implicit interface, compiler checks at compile time but hard to document/discover what methods a writer must provide.
-- **"You either have to go through the source code and see how writer is used, or let the compiler tell you which function is expected."**
-- Counter: "Anytype is type-checked at compile time, not runtime" – it's not duck typing.
-- Counter: "doc comments are a first-class construct in zig, so they are pretty accessible."
+- **"anytype is a documentation black hole"** – Implicit interface, compiler checks at
+                                                compile time but hard to
+                                                document/discover what methods a writer
+                                                must provide.
+- **"You either have to go through the source code and see how writer is used, or let
+  the compiler tell you which function is expected."**
+- Counter: "Anytype is type-checked at compile time, not runtime" – it's not duck
+  typing.
+- Counter: "doc comments are a first-class construct in zig, so they are pretty
+  accessible."
 
 ### std.io.AnyWriter / GenericWriter
 
-- **AnyWriter** – Type-erased writer for storing an implementation-independent writer in a struct field. `.any()` conversion. Error set erasure: widens typed errors to `anyerror`.
-- **GenericWriter / std.io.Writer** – Preserves typed error sets. "takes a function at compile time … no function pointers needed."
-- **Performance tradeoff** – Benchmarks: `genericWriter - 4035ns`, `appendSlice - 4026ns`, `appendSliceOptimized - 2884ns` (Zig 0.13, release). Rust comparison: ~1.7-2.0 µs – about 2× faster.
-- **"There is definitely overhead with the GenericWriter, seeing as it uses the AnyWriter for every call except `write`."**
+- **AnyWriter** – Type-erased writer for storing an implementation-independent writer in
+                  a struct field. `.any()` conversion. Error set erasure: widens typed
+                  errors to `anyerror`.
+- **GenericWriter / std.io.Writer** – Preserves typed error sets. "takes a function at
+                                      compile time … no function pointers needed."
+- **Performance tradeoff** – Benchmarks: `genericWriter - 4035ns`, `appendSlice -
+                             4026ns`, `appendSliceOptimized - 2884ns` (Zig 0.13,
+                             release). Rust comparison: ~1.7-2.0 µs – about 2× faster.
+- **"There is definitely overhead with the GenericWriter, seeing as it uses the
+  AnyWriter for every call except `write`."**
 
 ### write vs writeAll / partial writes
 
@@ -38,43 +61,56 @@ HN commenters discussed Zig writer interface design far beyond the article. Para
 ### std.fmt / std.json
 
 - **`std.fmt.format` / `print`** – Writer conventions for formatting.
-- **`std.json.stringify` / custom `jsonStringify`** – "Not only does its own usage of `out_stream: anytype` take more than a glance, it passes it into any custom `jsonStringify` function."
+- **`std.json.stringify` / custom `jsonStringify`** – "Not only does its own usage of
+                                                      `out_stream: anytype` take more
+                                                      than a glance, it passes it into
+                                                      any custom `jsonStringify`
+                                                      function."
 
 ### Rust traits comparison
 
 Repeatedly came up – the dominant framing device in the thread:
 
-- **"Rust traits seem like a strictly better tool here. You get exactly the same emitted code as anytype, but the expected interface is explicit and well documented."**
+- **"Rust traits seem like a strictly better tool here. You get exactly the same emitted
+  code as anytype, but the expected interface is explicit and well documented."**
 - **"Traits solve the problem for the compiler AND the programmer at the same time."**
 - **"I wish zig would copy rust's trait system into the language."**
 - **"Anytype only solves the problem for the compiler."**
-- Counter: **"In C++, every writer is `anytype`, in Java every writer is `AnyWriter`, in Rust every writer is `GenericWriter`. They all have tradeoffs."**
+- Counter: **"In C++, every writer is `anytype`, in Java every writer is `AnyWriter`, in
+  Rust every writer is `GenericWriter`. They all have tradeoffs."**
 
-Traits can have associated types (error type), default implementations, can be stored in structs, support both monomorphization and dynamic dispatch (`&dyn Trait`).
+Traits can have associated types (error type), default implementations, can be stored in
+structs, support both monomorphization and dynamic dispatch (`&dyn Trait`).
 
 ### Monomorphization / code bloat / dispatch overhead
 
 - **"Rust programs tend to heavily overuse monomorphization."**
-- **"What I'd love is a language which is able to compile 'impl TraitName' into dynamic dispatch in debug mode and only monomorphize it in release mode."**
+- **"What I'd love is a language which is able to compile 'impl TraitName' into dynamic
+  dispatch in debug mode and only monomorphize it in release mode."**
 - Function-pointer overhead, type erasure costs discussed with concrete benchmarks.
 
 ### Storing writers in structs
 
 - **AnyWriter is the answer** for storing implementation-independent writers.
-- **`anytype` cannot be stored in a struct field directly** – this came up repeatedly.
+- **`anytype` cannot be stored in a struct field directly** –
+  this came up repeatedly.
 
 ### Composition vs language-level interfaces
 
 - **"Zig is very intentionally verbose at almost every opportunity."**
 - **"Interfaces solve most of the problems of inheritance with none of the problems."**
 - **"The flexibility/lack of interfaces allows you to choose the correct abstraction."**
-- Comptime interface checker libraries: https://github.com/nilslice/zig-interface / https://github.com/hmusgrave/zinter – *"Comptime is amazing."*
+- Comptime interface checker libraries: https://github.com/nilslice/zig-interface /
+  https://github.com/hmusgrave/zinter – *"Comptime is amazing."*
 
 ### Stdlib churn / new Io
 
-- **"Allocators were a mess too before they cleaned it up. It's entirely possible writers will go a similar way."**
-- **"I love Zig, but anytype and the typed GenericWriters are a horrible mess. It is such a pain in the ass."**
-- **"There have been a lot of suggestions, some of which were tentatively accepted and then didn't work out … I'm not sure where that will end up by 1.0"**
+- **"Allocators were a mess too before they cleaned it up. It's entirely possible
+  writers will go a similar way."**
+- **"I love Zig, but anytype and the typed GenericWriters are a horrible mess. It is
+  such a pain in the ass."**
+- **"There have been a lot of suggestions, some of which were tentatively accepted and
+  then didn't work out … I'm not sure where that will end up by 1.0"**
 
 ### Typed error sets
 
@@ -83,7 +119,8 @@ Traits can have associated types (error type), default implementations, can be s
 
 ### "everything is public in a struct"
 
-Came up as a related Zig design choice – "otherwise sane debug printing would be impossible" vs "You don't want users of your code to depend on how it works internally."
+Came up as a related Zig design choice – "otherwise sane debug printing would be
+impossible" vs "You don't want users of your code to depend on how it works internally."
 
 The README reflects the actual HN discussion themes, not just the article title.
 
@@ -244,10 +281,10 @@ A tiny reproducible Zig stdlib harness testing writer interfaces:
 | `interface_documentation_marker` | Implicit requirements, doc comments, compiler errors |
 | `performance_scope_marker` | Timing / output sizes; dispatch / monomorphization / code bloat = context only |
 | `version_churn_marker` | Detected Zig version; old `std.io` vs new `std.Io` |
-| `wrapper_policy_marker` | Project-local `writer_result` struct – bytes_requested, bytes_written, error_label, etc. |
+| `wrapper_policy_marker` | Project-local `writer_result` struct |
 | `copy_size_timing_marker` | File sizes, timing, subprocess count |
-| `naive_writer_policy_marker` | Assumes every writer has every helper, ignores partial writes, treats `write` like `writeAll`, assumes `anytype` storable in struct, assumes AnyWriter preserves narrow error sets – **fails 1/51 cases (expected)** |
-| `external_interface_truth_not_tested_marker` | Rust traits, Java/C# interfaces, real serializers, production logging – not tested |
+| `naive_writer_policy_marker` | Ignores partial writes, assumes all helpers exist,<br>`anytype` storable, AnyWriter preserves errors<br>– **fails 1/51 (expected)** |
+| `external_interface_truth_not_tested_marker` | Rust traits, Java/C#, serializers,<br>production logging – not tested |
 
 ## Results
 
@@ -274,7 +311,8 @@ Full table in [RESULTS.md](RESULTS.md).
 |---|---|
 | `naive_writer_policy_expected_fail_01` | naive_writer_policy_expected_fail |
 
-See [RESULTS.md](RESULTS.md) for full tables, skip matrix, and per-case artifacts (`results_rows.csv`, `results_rows.json`).
+See [RESULTS.md](RESULTS.md) for full tables, skip matrix, and per-case artifacts
+(`results_rows.csv`, `results_rows.json`).
 
 ## Scope / Safety
 
@@ -291,9 +329,13 @@ This is a **toy local lab, not a production logging library.**
 
 ### Synthetic data only
 
-Fake labels used: `fake_message`, `demo_writer`, `synthetic_chunk`, `toy_output`, `example_log_line`, `sample_payload`, `fake_json_value`, `demo_buffer`, `synthetic_error_case`, `toy_partial_write`, `fictional_sink`, `fake_counter_writer`, `sample_struct_field`, `demo_any_writer`, `synthetic_format_case`, `toy_interface_case`.
+Fake labels used: `fake_message`, `demo_writer`, `synthetic_chunk`, `toy_output`,
+`example_log_line`, `sample_payload`, `fake_json_value`, `demo_buffer`,
+`synthetic_error_case`, `toy_partial_write`, `fictional_sink`, `fake_counter_writer`,
+`sample_struct_field`, `demo_any_writer`, `synthetic_format_case`, `toy_interface_case`.
 
-No real files, logs, config files, network data, JSON corpora, credentials, or service output.
+No real files, logs, config files, network data, JSON corpora, credentials, or service
+output.
 
 ### Invalid operations – not run
 
@@ -315,7 +357,8 @@ python3 generate_cases.py   # writes cases.json (51 cases)
 python3 run_lab.py          # finds zig, builds harness, runs cases, writes RESULTS.md
 ```
 
-`run_lab.py` searches for `zig` in PATH and common locations. No root / package manager / network required.
+`run_lab.py` searches for `zig` in PATH and common locations. No root / package manager
+/ network required.
 
 ### Zig harness directly
 
@@ -339,7 +382,8 @@ zig build-exe writer_interface_lab.zig -O ReleaseSafe
 | Sanitizers / static analyzers | Not a security tool |
 | Production interface design | Toy lab, not a verifier |
 
-Zig writer ergonomics, Rust trait comparisons, interface documentation, performance anecdotes, and stdlib churn are **HN discussion context, not locally reproduced**.
+Zig writer ergonomics, Rust trait comparisons, interface documentation, performance
+anecdotes, and stdlib churn are **HN discussion context, not locally reproduced**.
 
 ## References
 

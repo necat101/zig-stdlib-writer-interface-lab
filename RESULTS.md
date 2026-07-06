@@ -62,11 +62,15 @@ Naive writer failed **1 case** (expected).
 |---|---|
 | `naive_writer_policy_expected_fail_01` | naive_writer_policy_expected_fail |
 
-The naive writer policy assumes every writer has every helper method, ignores partial writes, treats `write` like `writeAll`, assumes `anytype` can be stored in a struct field, assumes AnyWriter preserves narrow error sets, assumes helper methods are always optimized, and assumes stdlib writer APIs are stable across versions.
+The naive writer policy assumes every writer has every helper method, ignores partial
+writes, treats `write` like `writeAll`, assumes `anytype` can be stored in a struct
+field, assumes AnyWriter preserves narrow error sets, assumes helper methods are always
+optimized, and assumes stdlib writer APIs are stable across versions.
 
 ## Skip / not-run matrix
 
-Invalid operations and out-of-scope contexts are intentionally marked `skip` or `not_tested` – never executed.
+Invalid operations and out-of-scope contexts are intentionally marked `skip` or
+`not_tested` – never executed.
 
 ### Interface / documentation – not run / not tested
 
@@ -140,4 +144,5 @@ Invalid operations and out-of-scope contexts are intentionally marked `skip` or 
 
 ---
 
-**Artifacts:** [`results_rows.csv`](results_rows.csv) · [`results_rows.json`](results_rows.json) · [`cases.json`](cases.json)
+**Artifacts:** [`results_rows.csv`](results_rows.csv) ·
+[`results_rows.json`](results_rows.json) · [`cases.json`](cases.json)

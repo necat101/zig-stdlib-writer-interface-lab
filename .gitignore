@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+writer_interface_lab
+*.o
+/tmp/
+*.tmp
+zig-cache/
+zig-out/

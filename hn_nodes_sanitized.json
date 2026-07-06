@@ -1,0 +1,779 @@
+{
+  "42849774": {
+    "by": "todsacerdoti",
+    "descendants": 73,
+    "id": 42849774,
+    "kids": [
+      42897229,
+      42896447,
+      42898283,
+      42897806,
+      42899858,
+      42898152,
+      42902396,
+      42901222,
+      42896370,
+      42912176
+    ],
+    "score": 140,
+    "time": 1738049161,
+    "title": "In Zig, what's a writer?",
+    "type": "story",
+    "url": "https://www.openmymind.net/In-Zig-Whats-a-Writer/"
+  },
+  "42897229": {
+    "by": "ziguratatur",
+    "id": 42897229,
+    "parent": 42849774,
+    "text": "I&#x27;ve been using zig for a week now. When I see a construct like writer I find myself looking for complexity that is just not there. I&#x27;m pleasantly surprised by the zig language design decisions. Initially I thought allocators were a pain but now I hardly notice them after I set up the struct init and deinit. And the myriad of zig pointer and slice types make me appreciate how C has overloaded the use of certain constructs in non-intuitive ways that we&#x27;ve just come to accept over the decades. I&#x27;m more impressed with zig than the last half dozen languages I&#x27;ve picked up - and the C&#x2F;C++ interop at the language and compiler level is just the icing on the cake.",
+    "time": 1738403366,
+    "type": "comment"
+  },
+  "42896447": {
+    "by": "schobers",
+    "id": 42896447,
+    "kids": [
+      42897405,
+      42900098,
+      42902368,
+      42898256
+    ],
+    "parent": 42849774,
+    "text": "It seems to me that the problem the author writes about is bigger than the writer abstraction. To me it feels like the lack of interfaces* and inheritance in the Zig language hinders creating meaningful abstractions because you always have to use composition.<p>Alternatively you could argue that this just isn&#x27;t the right approach within the boundaries of the Zig language: don&#x27;t try to abstract, just provide a meaningful implementation (in the standard library) and re-use (using composition).<p>Note:<p>*) Yes, I know, you can create interfaces but this introduces lots of boilerplate code where to cast&#x2F;forward pointers to their correct type&#x2F;implementation. For an example, the author refers to another article: <a href=\"https:&#x2F;&#x2F;www.openmymind.net&#x2F;Zig-Interfaces&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.openmymind.net&#x2F;Zig-Interfaces&#x2F;</a>.",
+    "time": 1738393830,
+    "type": "comment"
+  },
+  "42898283": {
+    "by": "jmull",
+    "id": 42898283,
+    "kids": [
+      42898751
+    ],
+    "parent": 42849774,
+    "text": "I think a lot of the confusion is just that it&#x27;s not what people are used to.<p>e.g., an anytime parameter is checked by the compiler, just a like a parameter of an interface type in a language with interfaces. In either case, if you try to pass a non-conforming type you get a compiler error.<p>Now, with an interface, you get a symbol name you can hang your hat on. That can really help when you&#x27;re in the &quot;I&#x27;m not exactly sure what I&#x27;m doing, I&#x27;m trying to figure out this API&quot; phase of development. API documentation and design need to compensate. But you need to be past that phase before you&#x27;re writing actually useful code anyway, so this isn&#x27;t that big a deal. Zig&#x27;s overall simplicity really mitigates this too. You&#x27;re probably going to be spending less overall time in the confusion stage.<p>(re &quot;writer: anytype&quot; the article says, &quot;You either have to go through the source code and see how writer is used, or let the compiler tell you which function is expected.&quot; which is true, but also true of writer: IWriter. It also leaves off the option of reading the docs. doc comments are a first-class construct in zig, so they are pretty accessible.)",
+    "time": 1738418093,
+    "type": "comment"
+  },
+  "42897806": {
+    "by": "cfiggers",
+    "id": 42897806,
+    "parent": 42849774,
+    "text": "In my so far very limited experience, Zig is very intentionally verbose at almost every opportunity. This isn&#x27;t what some people want in a language, and I get that. But because they&#x27;re SO consistent about it, Zig does end up with this effect of almost &quot;no news is good news.&quot; Like, when something seems straight-forward it&#x27;s because it literally is\u2014if they could&#x27;ve been more verbose about it they would&#x27;ve been. So you can sorta trust that, even to the point of <i>absence</i> of verbosity being meaningful data point.",
+    "time": 1738412484,
+    "type": "comment"
+  },
+  "42899858": {
+    "by": "serbuvlad",
+    "id": 42899858,
+    "kids": [
+      42899959,
+      42901822
+    ],
+    "parent": 42849774,
+    "text": "This is basically how you would do it in C as well.<p>I haven&#x27;t had as much time as I would have liked to play around with Zig. But, it seems like Zig is like C, but with much stronger static checks, much less UB, lots of useful syntactic sugar, an anti-global agenda (explicitly passed allocator in Zig vs strtok in C) etc. And, truthfully, I really like this.<p>If we can move from a C&#x2F;C++&#x2F;Java world to a Zig&#x2F;Rust&#x2F;Go world, I would view that as an absolute win.",
+    "time": 1738429455,
+    "type": "comment"
+  },
+  "42898152": {
+    "by": "geetee",
+    "id": 42898152,
+    "parent": 42849774,
+    "text": "This was one of the first things I encountered while dabbling in Zig. I spent a few hours digging through examples in the standard library and googling to see how you&#x27;re supposed to pass a writer.<p>My day job is with TypeScript, so &quot;any&quot; gives me some heartache, but it seems unwarranted because Zig verifies the correctness at compile time. I won&#x27;t make any claims to really understand Zig yet, but it was enough to make me feel comfortable with continuing to learn it.",
+    "time": 1738416665,
+    "type": "comment"
+  },
+  "42902396": {
+    "by": "nilslice",
+    "id": 42902396,
+    "parent": 42849774,
+    "text": "I find this part of Zig challenging. I like real interfaces as a language primitive, sue me!<p>However, I recently just swallowed my pride and try to work by convention: provide a method on the implementation type by the same name as the `anytype` argument. `T.writer()` in this case, `T.allocator()` in others, etc.<p>Previously trying to battle this, I went about as far as the language would let me attempt to automate the type validation: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;nilslice&#x2F;zig-interface\">https:&#x2F;&#x2F;github.com&#x2F;nilslice&#x2F;zig-interface</a><p>This at least allows you to leverage composition to combine &quot;interfaces&quot; - but the caller still faces the `anytype` issue.<p>I&#x27;d like to re-write this (with admitted of help from Claude!) to follow the stdlib pattern used in things like `std.mem.Allocator`, but I reach for this too infrequently to dedicate the time.",
+    "time": 1738444364,
+    "type": "comment"
+  },
+  "42901222": {
+    "by": "sweeter",
+    "id": 42901222,
+    "kids": [
+      42902311
+    ],
+    "parent": 42849774,
+    "text": "I love Zig, but anytype and the typed GenericWriters are a horrible mess. It is such a pain in the ass.",
+    "time": 1738437335,
+    "type": "comment"
+  },
+  "42896370": {
+    "by": "benob",
+    "id": 42896370,
+    "kids": [
+      42896572,
+      42897553,
+      42896525,
+      42897589,
+      42899354,
+      42897183,
+      42897583,
+      42896528,
+      42902835,
+      42897719,
+      42896561,
+      42898183
+    ],
+    "parent": 42849774,
+    "text": "How are you supposed to implement the concept of interface in non OOP languages?",
+    "time": 1738393043,
+    "type": "comment"
+  },
+  "42912176": {
+    "by": "jvillasante",
+    "id": 42912176,
+    "parent": 42849774,
+    "text": "It seems to me that Zig is a language that has been hacked together as opposed to designed carefully. What a mess around such a simple concept!",
+    "time": 1738532902,
+    "type": "comment"
+  },
+  "42897405": {
+    "by": "PaulRobinson",
+    "id": 42897405,
+    "kids": [
+      42903943
+    ],
+    "parent": 42896447,
+    "text": "As you note, within the Zig philosophy, I don&#x27;t think this is a problem, I think it&#x27;s an intentional feature.",
+    "time": 1738406479,
+    "type": "comment"
+  },
+  "42900098": {
+    "by": "nmilo",
+    "id": 42900098,
+    "kids": [
+      42902782
+    ],
+    "parent": 42896447,
+    "text": "This is exactly Zig&#x27;s strength, not its problem. The flexibility&#x2F;lack of interfaces allows you to choose the correct abstraction for the given task. In C++, every writer is `anytype`, in Java every writer is `AnyWriter`, in Rust every writer is `GenericWriter`. They all have tradeoffs but &quot;fits better due to language design&quot; shouldn&#x27;t be one of the tradeoffs considered.",
+    "time": 1738430888,
+    "type": "comment"
+  },
+  "42902368": {
+    "by": "cgh",
+    "id": 42902368,
+    "kids": [
+      42904972
+    ],
+    "parent": 42896447,
+    "text": "If you read the end of that interfaces article, you&#x27;ll see a low-boilerplate way to get interfaces using tagged enums. There&#x27;s no pointer casting etc. involved.",
+    "time": 1738444241,
+    "type": "comment"
+  },
+  "42898256": {
+    "by": "MrMcCall",
+    "id": 42898256,
+    "parent": 42896447,
+    "text": "A person who is inundated with boilerplate code doesn&#x27;t (yet) understand the power of code generation.<p>The proper technique is to &quot;define the system&quot;, then &quot;generate the code&quot;. Yes, it is <i>very</i> non-trivial and difficult, but <i>all</i> interesting information processing systems are <i>always</i> like that :-)",
+    "time": 1738417785,
+    "type": "comment"
+  },
+  "42898751": {
+    "by": "latch",
+    "id": 42898751,
+    "kids": [
+      42900299
+    ],
+    "parent": 42898283,
+    "text": "A couple comments have mentioned that whatever issue my post raises, are minor compared to the simplicity of the language. But the current implementation of GenericWriter + AnyWriter (with some performance pitfalls) seems more, not less, complicated. Also, neither of these, nor anytype, lend themselves to _simple_ documentation, so that seems like another strike against the simplicity-argument.<p>As for anytype specifically, in simple cases where it&#x27;s being used in a single function, you can quickly figure out what it needs.<p>But in non trivial cases, the parameter can be passed all over the place, including into different packages. For example `std.json.stringify`. Not only does its own usage of `out_stream: anytype` take more than a glance, it passes it into any custom `jsonStringify` function. So you don&#x27;t just need to know what `std.json.stringify` needs, but also any what any custom serialization needs.",
+    "time": 1738421687,
+    "type": "comment"
+  },
+  "42899959": {
+    "by": "jstimpfle",
+    "id": 42899959,
+    "kids": [
+      42902964
+    ],
+    "parent": 42899858,
+    "text": "And the anytype stuff seems pretty close to C++ templates. I wonder how different comptime really is as compared to templates + constexpr?<p>As for C++, my experience is that templates can help produce some things in a type safe way that you later tend to regret and understand you should have never produced in the first place :-)<p>Just created some custom closure producing code that takes a pointer to any function along with arguments. The arguments get stored in custom allocations and can be applied to the function at any later point. Creating the template code is quite painful and probably none of my teammates will be able to maintain it. On the flipside, closures like this might be the right API for the use case.",
+    "time": 1738430030,
+    "type": "comment"
+  },
+  "42901822": {
+    "by": "pjmlp",
+    "id": 42901822,
+    "parent": 42899858,
+    "text": "More like Zig is Modula-2 with an updated syntax for C folks, plus comptime.<p>It is the almost safe path we could have taken if the likes of Modula-2 and Object Pascal, among others, had stayed in the mainstream.",
+    "time": 1738441072,
+    "type": "comment"
+  },
+  "42902311": {
+    "by": "throwawaymaths",
+    "id": 42902311,
+    "kids": [
+      42906198
+    ],
+    "parent": 42901222,
+    "text": "Allocators were a mess too before they cleaned it up.  It&#x27;s entirely possible writers will go a similar way (though the type erasure does scare some people).  I can&#x27;t claim to know what&#x27;s in the team&#x27;s heads, but it seems the language is very much more stable compared to before, but the stdlib is generally up for grabs for quakes if a clearer way forward is found.",
+    "time": 1738443883,
+    "type": "comment"
+  },
+  "42896572": {
+    "by": "unclad5968",
+    "id": 42896572,
+    "kids": [
+      42897255
+    ],
+    "parent": 42896370,
+    "text": "The same way the OOP compilers implement them, with v-tables. Basically the compiler makes a table of function pointers so calls can be resolved (not sure resolved is the correct term) at runtime.<p>In Zig or any other C like language without &quot;interfaces&quot;, you would implement the V-table by hand, which is a common idiom in Zig.",
+    "time": 1738395129,
+    "type": "comment"
+  },
+  "42897553": {
+    "by": "Arch485",
+    "id": 42897553,
+    "parent": 42896370,
+    "text": "VTable structs. Instead of declaring `interface Foo { void bar(); }`, you do `struct Foo { this: <i>void, bar: </i>const fn (this: *void); }` (i.e. a struct with a function pointer field and a &quot;this&quot; pointer). This is how interfaces work under the hood in other languages.<p>Note that the code I wrote is not any particular language; it&#x27;s just demonstrative.",
+    "time": 1738408585,
+    "type": "comment"
+  },
+  "42896525": {
+    "by": "masklinn",
+    "id": 42896525,
+    "parent": 42896370,
+    "text": "Interface or interface-adjacent features are present in numerous non-OO languages: ML modules, Haskell typeclasses, rust traits, go interfaces, \u2026",
+    "time": 1738394607,
+    "type": "comment"
+  },
+  "42897589": {
+    "by": "aiono",
+    "id": 42897589,
+    "parent": 42896370,
+    "text": "Non-oop languages has interfaces for a long time: Rust&#x27;s traits, Haskell&#x27;s typesclasses etc.",
+    "time": 1738409141,
+    "type": "comment"
+  },
+  "42899354": {
+    "by": "hansvm",
+    "id": 42899354,
+    "kids": [
+      42902582
+    ],
+    "parent": 42896370,
+    "text": "One halfway option in Zig (though I _think_ interfaces are still being considered for addition to the language as first-class citizens) is to use the language&#x27;s metaprogramming facilities.<p>Somebody, once, in the userspace of the language, needs to write a utility that reads a type and produces an interface checker for that type, so that you&#x27;re able to write code like the following:<p><pre><code>  const IDog = Checker(TemplateDogType);\n</code></pre>\nThen you can use that when defining a function expecting to conform to some interface:<p><pre><code>  fn bark(_dog: anytype) void {\n    const dog: IDog(_dog) = _dog;\n    dog.bark();\n  }\n</code></pre>\nYou can easily get nice compiler errors, no runtime overhead, and all the usual sorts of things you expect from a simple interface system. It&#x27;s just more verbose.<p>Limiting access to non-interface methods without runtime overhead would be a bit more cumbersome I think. Off the top of my head, the following API is possible though:<p><pre><code>  fn bark(dog: anytype) void {\n    IDog.bark(&amp;dog);\n  }</code></pre>",
+    "time": 1738425620,
+    "type": "comment"
+  },
+  "42897183": {
+    "by": "virexene",
+    "id": 42897183,
+    "parent": 42896370,
+    "text": "In Zig&#x27;s case, you do what Rust&#x2F;C++ do implicitly and create a table of function pointers",
+    "time": 1738402884,
+    "type": "comment"
+  },
+  "42897583": {
+    "by": "donatj",
+    "id": 42897583,
+    "parent": 42896370,
+    "text": "I&#x27;d do it similar to how Go does it. Zig is heavily influenced by Go to begin with.",
+    "time": 1738409046,
+    "type": "comment"
+  },
+  "42896528": {
+    "by": "feverzsj",
+    "id": 42896528,
+    "kids": [
+      42897503,
+      42896668
+    ],
+    "parent": 42896370,
+    "text": "Using function pointers like most c projects do.",
+    "time": 1738394657,
+    "type": "comment"
+  },
+  "42902835": {
+    "by": "feelamee",
+    "id": 42902835,
+    "parent": 42896370,
+    "text": "concept <i>interface</i> isn&#x27;t owned or invented by OOP.",
+    "time": 1738447240,
+    "type": "comment"
+  },
+  "42897719": {
+    "by": "mrkeen",
+    "id": 42897719,
+    "kids": [
+      42899773,
+      42899582
+    ],
+    "parent": 42896370,
+    "text": "Rebuttal, how do you implement interfaces in OOP languages in cases where you don&#x27;t yet expect the object to exist, e.g. an interface with toString and fromString methods.",
+    "time": 1738411159,
+    "type": "comment"
+  },
+  "42896561": {
+    "by": "GuestHNUser",
+    "id": 42896561,
+    "parent": 42896370,
+    "text": "Function pointers typically",
+    "time": 1738395005,
+    "type": "comment"
+  },
+  "42898183": {
+    "by": "humanfromearth9",
+    "dead": true,
+    "id": 42898183,
+    "parent": 42896370,
+    "text": "[flagged]",
+    "time": 1738417011,
+    "type": "comment"
+  },
+  "42903943": {
+    "by": "Turskarama",
+    "id": 42903943,
+    "kids": [
+      42905263
+    ],
+    "parent": 42897405,
+    "text": "There&#x27;s no reason a feature can&#x27;t be a problem though.  Many would point out that inheritance is both.<p>Interfaces solve most of the problems of inheritance with none of the problems.  Some people would point out that you can implement interfaces yourself, but that isn&#x27;t a real solution since either people won&#x27;t bother or there will end up being a library everyone uses to do it.<p>I think it&#x27;s a useful abstraction and leaving it out will slow the adoption of Zig.",
+    "time": 1738454593,
+    "type": "comment"
+  },
+  "42902782": {
+    "by": "josephg",
+    "id": 42902782,
+    "kids": [
+      42903123
+    ],
+    "parent": 42900098,
+    "text": "&gt; in Rust every writer is `GenericWriter`.<p>I may be misunderstanding the article - but it looks like GenericWriter in zig still has dynamic dispatch overheads at runtime in all cases. Rust traits are more like \u201canytype\u201d - since they get monomorphized by the compiler and have no runtime overhead at all. But unlike zig\u2019s anytype, traits have excellent documentation (since they\u2019re explicit, not implicit interfaces). Rust can also implicitly create an \u201cAnyWriter\u201d style object if you don\u2019t want monomorphization via &amp;dyn Trait. But you often don\u2019t need to, because you can store trait objects in other structs just fine. - Though admittedly, you can do the same in zig via comptime structs.<p>There are a lot of things I admire about zig. But for interfaces like Writer, rust\u2019s trait system seems like the better tool. I wish zig would copy rust\u2019s trait system into the language.",
+    "time": 1738446955,
+    "type": "comment"
+  },
+  "42904972": {
+    "by": "remexre",
+    "id": 42904972,
+    "parent": 42902368,
+    "text": "That relies on whoever&#x27;s defining the Writer knowing every implementation of Writer in existence though, right? Same reason why Rust has both enums and trait objects; it&#x27;s the expression problem.",
+    "time": 1738462392,
+    "type": "comment"
+  },
+  "42900299": {
+    "by": "jmull",
+    "id": 42900299,
+    "kids": [
+      42902911,
+      42900655
+    ],
+    "parent": 42898751,
+    "text": "&gt; But in non trivial cases, the parameter can be passed all over the place<p>Like pretty much any parameter in any language? That&#x27;s abstraction.<p>Re jsonStringfy, that&#x27;s a way for a type to control how its own instances are serialized as JSON. std.json.stringify doesn&#x27;t depend on the details of a jsonStringfy implementation (nor a caller of std.json.stringify). A type being able to implement a method to customize how instances of the type are serialized is a common&#x2F;typical feature of a lot of JSON serializers.",
+    "time": 1738431995,
+    "type": "comment"
+  },
+  "42902964": {
+    "by": "int_19h",
+    "id": 42902964,
+    "parent": 42899959,
+    "text": "Comptime is pretty much C++ templates without the need for a completely separate language for metaprogramming, which is the way it should be IMO.<p>(The downside is that there&#x27;s no template parameter inference, but I&#x27;m pretty sure that this is one of those things that Zig would avoid by design anyway.)",
+    "time": 1738448058,
+    "type": "comment"
+  },
+  "42906198": {
+    "by": "sweeter",
+    "id": 42906198,
+    "parent": 42902311,
+    "text": "That is definitely one of the things I really do love about Zig. Is that even I as a semi-inexperienced programmer have had multiple pirs accepted in zig without really any friction? And I&#x27;ve talked to Andrew and a few other of the guys and girls multiple times and they are very receptive and very open to well thought out well planned solutions. But in regards to any writer and any type, there have been a lot of suggestions, some of which were tentatively accepted and then didn&#x27;t work out in the end and some of which have been denied such as interfaces. So I&#x27;m not sure where that will end up by 1.0",
+    "time": 1738474246,
+    "type": "comment"
+  },
+  "42897255": {
+    "by": "bsaul",
+    "id": 42897255,
+    "kids": [
+      42897655,
+      42897543,
+      42897770,
+      42897475
+    ],
+    "parent": 42896572,
+    "text": "do you have an example of what that would look like ?<p>I&#x27;m a bit confused about when you would construct this table and how one would use it",
+    "time": 1738403692,
+    "type": "comment"
+  },
+  "42902582": {
+    "by": "cgh",
+    "id": 42902582,
+    "kids": [
+      42903311
+    ],
+    "parent": 42899354,
+    "text": "I&#x27;m not sure I understand. Anytype is type-checked at compile time, not runtime, so you already have these things. The downside of anytype is that it&#x27;s non-documenting, in the sense that you can&#x27;t read the function signature and know what&#x27;s expected.",
+    "time": 1738445538,
+    "type": "comment"
+  },
+  "42897503": {
+    "by": "tialaramex",
+    "id": 42897503,
+    "kids": [
+      42898225,
+      42897612
+    ],
+    "parent": 42896528,
+    "text": "Notice that this choice, which I agree is popular in C software, has a perf overhead. I&#x27;ll illustrate:<p>Imagine there are two functions with the same signature dog_noise and goose_noise, and goose_noise needs to set up a Honk Apparatus but dog_noise does not, it can easily Bark without prior setup.<p>Now suppose we want to use our own make_noise_six_times function, but we&#x27;re going to pass in a function to say which noise. make_noise_six_times(dog_noise) and make_noise_six_times(goose_noise)<p>With this function pointer approach, make_noise_six_times has <i>no idea</i> about the Honk Apparatus, it will just call into goose_noise six times, each time setting up and tearing down a Honk Apparatus. At runtime these are likely CALL instructions.<p>However, in a language like Rust that&#x27;s going to be mono-morphized, make_noise_six_times(dog_noise) and make_noise_six_times(goose_noise) end up generating two implementations which get optimised, there&#x27;s a good chance the noise sub-functions are inlined - so no function calls - and the creation of the Honk Apparatus may get hoisted out of the loop for the make_noise_six_times(goose_noise) implementation, even though it&#x27;s across function boundaries, so long as that obeys the &quot;As if&quot; rule.<p>The reduction in overhead can be dramatic - if your inner functions are tiny the call overhead might dwarf what they actually do, so the inlining makes the whole program orders of magnitude faster in this case. This is very noticeable for e.g. sorting, since the comparison function is executed so often in a hot loop, if that&#x27;s a C function call it&#x27;s so much more expensive than if it&#x27;s a single inlined CPU instruction.",
+    "time": 1738407803,
+    "type": "comment"
+  },
+  "42896668": {
+    "by": "jimbob45",
+    "id": 42896668,
+    "kids": [
+      42897386,
+      42896789,
+      42899918
+    ],
+    "parent": 42896528,
+    "text": "There\u2019s no excuse for C not to have some syntactic sugar around function pointers at this point. They\u2019re miserable to use.",
+    "time": 1738396273,
+    "type": "comment"
+  },
+  "42899773": {
+    "deleted": true,
+    "id": 42899773,
+    "parent": 42897719,
+    "time": 1738428822,
+    "type": "comment"
+  },
+  "42899582": {
+    "by": "caspper69",
+    "id": 42899582,
+    "kids": [
+      42899793
+    ],
+    "parent": 42897719,
+    "text": "With the interface keyword (java&#x2F;c#).<p>You just define the required methods and that&#x27;s the interface.",
+    "time": 1738427377,
+    "type": "comment"
+  },
+  "42905263": {
+    "by": "metaltyphoon",
+    "id": 42905263,
+    "kids": [
+      42909295
+    ],
+    "parent": 42903943,
+    "text": "This and the everything is public in a struct is wild. The \u201cdocument it\u201d or use _ to mean \u201cdon&#x27;t touch this\u201d for a user is crazy IMO.",
+    "time": 1738465002,
+    "type": "comment"
+  },
+  "42903123": {
+    "by": "nmilo",
+    "id": 42903123,
+    "kids": [
+      42904028,
+      42904008
+    ],
+    "parent": 42902782,
+    "text": "No, GenericWriter takes a function at compile time and it gives you a GenericWriter struct that calls that function (at compile time), no function pointers needed.",
+    "time": 1738449082,
+    "type": "comment"
+  },
+  "42902911": {
+    "by": "josephg",
+    "id": 42902911,
+    "kids": [
+      42904801
+    ],
+    "parent": 42900299,
+    "text": "&gt; Like pretty much any parameter in any language? That&#x27;s abstraction.<p>It\u2019s crappy abstraction. Why make every user of the interface figure out how to use it properly? And guess what functions are required and which are always available?<p>Rust traits seem like a strictly better tool here. You get exactly the same emitted code as anytype, but the expected interface is explicit and well documented. Any time a trait name appears, you can cmd+click the trait name and see what functions are parts of the trait. It\u2019s clean and explicit.<p>And traits can also have associated types (eg for an error type). They can have default implementations of functions. You can store a trait object in a struct. And you can use &amp;dyn Trait if you want dynamic dispatch instead of monomorphisation. If this article is anything to go by, Zig makes all of this stuff difficult to impossible.<p>Anytype only solves the problem for the compiler. Traits solve the problem for the compiler and the programmer at the same time.",
+    "time": 1738447775,
+    "type": "comment"
+  },
+  "42900655": {
+    "by": "SkiFire13",
+    "id": 42900655,
+    "parent": 42900299,
+    "text": "&gt; Like pretty much any parameter in any language? That&#x27;s abstraction.<p>This is only an issue in languages with duck-typing though. You&#x27;re not really abstracting something if you need to go look how it&#x27;s used to understand what to pass.",
+    "time": 1738433994,
+    "type": "comment"
+  },
+  "42897655": {
+    "by": "pjmlp",
+    "id": 42897655,
+    "parent": 42897255,
+    "text": "Basically you have something like<p><pre><code>    typedef struct Writer {\n      int (*method_one)(const char*, int);\n      &#x2F;&#x2F;...  \n    } Writer;\n\n\n\n    void takes_a_writer(const Writer *obj)  {\n      &#x2F;&#x2F; somewhere \n      obj-&gt;method_one(buff, buff_size);\n      &#x2F;&#x2F; ...\n    }\n\n\n    &#x2F;&#x2F; a method implementation \n    int method_one_impl(const char *buff, int n) {\n      &#x2F;&#x2F;...\n     }\n\n\n     &#x2F;&#x2F; somewhere else\n     Writer w;\n     w.method_one = method_one_impl;\n\n     &#x2F;&#x2F;...\n     takes_a_writer(&amp;w);\n\n</code></pre>\nIt isn&#x27;t the best example, but should do the job giving you an overview.",
+    "time": 1738410082,
+    "type": "comment"
+  },
+  "42897543": {
+    "by": "frabert",
+    "id": 42897543,
+    "parent": 42897255,
+    "text": "Let&#x27;s say you have an interface &#x27;Reader&#x27; with methods &#x27;Read&#x27; and &#x27;Close&#x27;. In a world where no interfaces exist, every user of a different implementer of this interface would need to know exactly which &#x27;Read&#x27; and &#x27;Close&#x27; implementations to call, and possibly generate different code for it.<p>In order to make this mechanism generic, you can instead say, &quot;every implementer of the &#x27;Reader&#x27; interface has a pointer as its first field, and that pointer leads to an array of two elements: the first element is a pointer to a &#x27;Read&#x27; method, the second to a &#x27;Close&#x27; method.&quot;<p>This way, the user of a Reader knows nothing of the internals of each implementation, other than how to find its methods",
+    "time": 1738408356,
+    "type": "comment"
+  },
+  "42897770": {
+    "by": "2c2c2c",
+    "id": 42897770,
+    "kids": [
+      42902547
+    ],
+    "parent": 42897255,
+    "text": "somethign like this I think. i only dabble in zig&#x2F;systems stuff so there might be better&#x2F;more idiomatic ways to write parts<p><pre><code>  const std = @import(&quot;std&quot;);\n  \n  &#x2F;&#x2F; base struct\n  const Animal = struct {\n      &#x2F;&#x2F; points to the derived struct\n      ctx: *anyopaque,\n      &#x2F;&#x2F; points to the vtable of the concrete type\n      vtable: *const VTable,\n  \n      &#x2F;&#x2F; the vtable interface derived struct must implement\n      const VTable = struct {\n          make_noise: *const fn (ctx: *anyopaque, loudness: u32) anyerror!void,\n      };\n  \n      &#x2F;&#x2F; call the derived struct&#x27;s implementation\n      pub fn make_noise(animal: Animal, loudness: u32) anyerror!void {\n          return animal.vtable.make_noise(animal.ctx, loudness);\n      }\n  };\n  \n  const Dog = struct {\n      &#x2F;&#x2F; extra data\n      weight: u32,\n  \n      &#x2F;&#x2F; implement the interface\n      const vtable = Animal.VTable{\n          .make_noise = &amp;make_noise,\n      };\n  \n      pub fn make_noise(ctx: *anyopaque, loudness: u32) anyerror!void {\n          const dog: *Dog = @alignCast(@ptrCast(ctx));\n          std.debug.print(&quot;woof {} {}\\n&quot;, .{ dog.weight, loudness });\n      }\n  \n      &#x2F;&#x2F; helper to convert to the base struct\n      pub fn _animal(self: *Dog) Animal {\n          return Animal{\n              .ctx = @ptrCast(self),\n              .vtable = &amp;vtable,\n          };\n      }\n  };\n  \n  const Cat = struct {\n      weight: u32,\n  \n      const vtable = Animal.VTable{\n          .make_noise = &amp;make_noise,\n      };\n  \n      pub fn _animal(self: *Cat) Animal {\n          return Animal{\n              .ctx = @ptrCast(self),\n              .vtable = &amp;vtable,\n          };\n      }\n  \n      pub fn make_noise(ctx: *anyopaque, loudness: u32) anyerror!void {\n          const cat: *Cat = @alignCast(@ptrCast(ctx));\n          std.debug.print(&quot;meow {} {}\\n&quot;, .{ cat.weight, loudness });\n      }\n  };\n  \n  pub fn main() !void {\n      var gpa = std.heap.GeneralPurposeAllocator(.{}){};\n      const alloc = gpa.allocator();\n  \n      &#x2F;&#x2F; list of base structs\n      var animal_list = std.ArrayList(Animal).init(alloc);\n      defer {\n          for (animal_list.items) |animal| {\n              if (animal.vtable == &amp;Dog.vtable) {\n                  const dog: *Dog = @alignCast(@ptrCast(animal.ctx));\n                  alloc.destroy(dog);\n              } else if (animal.vtable == &amp;Cat.vtable) {\n                  const cat: *Cat = @alignCast(@ptrCast(animal.ctx));\n                  alloc.destroy(cat);\n              }\n          }\n          animal_list.deinit();\n      }\n  \n      for (0..20) |i| {\n          if (i % 2 == 0) {\n              var dog = try alloc.create(Dog);\n              dog.* = Dog{ .weight = @intCast(i) };\n              try animal_list.append(dog._animal());\n          } else {\n              var cat = try alloc.create(Cat);\n              cat.* = Cat{ .weight = @intCast(i) };\n              try animal_list.append(cat._animal());\n          }\n      }\n  \n      &#x2F;&#x2F; meows and woofs here\n      for (animal_list.items) |animal| {\n          try animal.make_noise(10);\n      }\n  }\n</code></pre>\nive written a couple and still find them mindbendy",
+    "time": 1738411823,
+    "type": "comment"
+  },
+  "42897475": {
+    "by": "genewitch",
+    "id": 42897475,
+    "parent": 42897255,
+    "text": "I&#x27;m not sure what interface means but virtual table in C++ apparently for inheritance, virtual function, and polymorphism (which is a spell or something<p>The rest of OOP is lipstick on arrays and arrays of arrays and &quot;structs &#x2F; records&quot; or software defined arrays.<p>In my opinion.",
+    "time": 1738407351,
+    "type": "comment"
+  },
+  "42903311": {
+    "by": "hansvm",
+    "id": 42903311,
+    "parent": 42902582,
+    "text": "The thing you gain is exactly that missing documentation (via @compileError and whatnot in the hypothetical library code I hand-waved away). The compiler errors can point you to the exact interface you&#x27;re supposed to adhere to (as opposed to combatting errors one at a time), and by construction give you a non-out-of-date template to examine.<p>It&#x27;s not perfect since it&#x27;s all in the userspace of the language (it&#x27;d be nicer to be able to express an interface type in the function signature), but it solves the problem you mentioned completely.",
+    "time": 1738450298,
+    "type": "comment"
+  },
+  "42898225": {
+    "by": "wavemode",
+    "id": 42898225,
+    "kids": [
+      42900319
+    ],
+    "parent": 42897503,
+    "text": "I happen to be of the opinion that Rust programs tend to heavily overuse monomorphization. It&#x27;s not always so clear cut that it&#x27;s worth gaining a slight amount of runtime speed in exchange for losing a massive amount of compilation speed and binary size.<p>What I&#x27;d love is a language which is able to compile &#x27;impl TraitName&#x27; into dynamic dispatch in debug mode and only monomorphize it in release mode.<p>Basically, an automation of this technique: <a href=\"https:&#x2F;&#x2F;play.rust-lang.org&#x2F;?version=stable&amp;mode=debug&amp;edition=2021&amp;gist=1055a2f0583c4c01e1386508bb506ee4\" rel=\"nofollow\">https:&#x2F;&#x2F;play.rust-lang.org&#x2F;?version=stable&amp;mode=debug&amp;editio...</a>",
+    "time": 1738417478,
+    "type": "comment"
+  },
+  "42897612": {
+    "by": "krab",
+    "id": 42897612,
+    "parent": 42897503,
+    "text": "You can still have a full object that carries both state and function pointers.",
+    "time": 1738409443,
+    "type": "comment"
+  },
+  "42897386": {
+    "by": "fuhsnn",
+    "id": 42897386,
+    "kids": [
+      42897555
+    ],
+    "parent": 42896668,
+    "text": "With &quot;typeof&quot; standardized in C23 it kinda does the job:<p>int(* fnptr_name)(int param) becomes typeof(int(int param))* fnptr_name<p>There is a recent proposal to update standard headers to this style:\n<a href=\"https:&#x2F;&#x2F;www.open-std.org&#x2F;jtc1&#x2F;sc22&#x2F;wg14&#x2F;www&#x2F;docs&#x2F;n3450.txt\" rel=\"nofollow\">https:&#x2F;&#x2F;www.open-std.org&#x2F;jtc1&#x2F;sc22&#x2F;wg14&#x2F;www&#x2F;docs&#x2F;n3450.txt</a>",
+    "time": 1738405919,
+    "type": "comment"
+  },
+  "42896789": {
+    "by": "ajb",
+    "id": 42896789,
+    "parent": 42896668,
+    "text": "It does. You don&#x27;t need to use &amp; on a function or * on a function pointer, this happens automatically (see <a href=\"https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;7518815&#x2F;function-pointer-automatic-dereferencing\" rel=\"nofollow\">https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;7518815&#x2F;function-pointer...</a> ).<p>I suppose the : operator from lua would be useful.",
+    "time": 1738398000,
+    "type": "comment"
+  },
+  "42899918": {
+    "by": "jstimpfle",
+    "id": 42899918,
+    "parent": 42896668,
+    "text": "C syntax becomes hard to read once you nest function declarations (i.e. functions taking functions, taking functions...). But that&#x27;s actually the case for most common syntaxes. Haskell type syntax is an exception, but that&#x27;s a language where you&#x27;re using lots of higher-order functions.<p>For the most common use cases C syntax is quite ergonomic once you&#x27;ve learned the principle.<p><pre><code>    &#x2F;&#x2F; declare func as normal function\n    void func(ARGUMENTS);\n\n    &#x2F;&#x2F; declare (*func) as normal function: func is a pointer to a normal function\n    void (*func)(ARGUMENTS);\n\n    &#x2F;&#x2F; can also declare a type name instead of a function\n    typedef void functype(ARGUMENTS);\n\n    &#x2F;&#x2F; and then use that to declare function-pointer\n    functype *func;\n\n    &#x2F;&#x2F; can also declare a function pointer type directly (I don&#x27;t normally do this)\n    typedef void (*funcptrtype)(ARGUMENTS);\n    funcptrtype func;  &#x2F;&#x2F; declare function pointer</code></pre>",
+    "time": 1738429804,
+    "type": "comment"
+  },
+  "42899793": {
+    "by": "layer8",
+    "id": 42899793,
+    "kids": [
+      42900168
+    ],
+    "parent": 42899582,
+    "text": "Think again about fromString, that would be a static constructor method. The GP is looking at metaclasses.",
+    "time": 1738428961,
+    "type": "comment"
+  },
+  "42909295": {
+    "by": "throwawaymaths",
+    "id": 42909295,
+    "kids": [
+      42913344
+    ],
+    "parent": 42905263,
+    "text": "everything is public in a struct is <i>great</i>, otherwise sane debug printing would be impossible.  there are other languages where nothing is private and operability (debugging on the fly when shit is falling down around you in prod) is unparalleled.",
+    "time": 1738510599,
+    "type": "comment"
+  },
+  "42904028": {
+    "by": "latch",
+    "id": 42904028,
+    "kids": [
+      42906934
+    ],
+    "parent": 42903123,
+    "text": "There&#x27;s definitely overhead with the GenericWriter, seeing as it uses the AnyWriter for every call except `write` (1)<p><pre><code>    genericWriter        - 31987.66ns per iterations\n    appendSlice          - 20112.35ns per iterations\n    appendSliceOptimized - 12996.49ns per iterations\n\n</code></pre>\n`appendSliceOptimized` is implemented using knowledge of the underlying writer, the way that say an interface implementation in Go would be able to. It&#x27;s a big part of the reason that reading a file in Zig line-by-line can be so much slower than in other languages (2)<p>(1) <a href=\"https:&#x2F;&#x2F;gist.github.com&#x2F;karlseguin&#x2F;1d189f683797b0ee00cdb8186f23af98\" rel=\"nofollow\">https:&#x2F;&#x2F;gist.github.com&#x2F;karlseguin&#x2F;1d189f683797b0ee00cdb8186...</a><p>(2) <a href=\"https:&#x2F;&#x2F;github.com&#x2F;ziglang&#x2F;zig&#x2F;issues&#x2F;17985\">https:&#x2F;&#x2F;github.com&#x2F;ziglang&#x2F;zig&#x2F;issues&#x2F;17985</a>",
+    "time": 1738455250,
+    "type": "comment"
+  },
+  "42904008": {
+    "deleted": true,
+    "id": 42904008,
+    "parent": 42903123,
+    "time": 1738455075,
+    "type": "comment"
+  },
+  "42904801": {
+    "by": "jmull",
+    "id": 42904801,
+    "kids": [
+      42906098
+    ],
+    "parent": 42902911,
+    "text": "&gt; If this article is anything to go by, Zig makes all of this stuff difficult to impossible.<p>Well, having done it, it\u2019s not.",
+    "time": 1738460928,
+    "type": "comment"
+  },
+  "42902547": {
+    "by": "cgh",
+    "id": 42902547,
+    "kids": [
+      42904452
+    ],
+    "parent": 42897770,
+    "text": "You can just used tagged enums and the inline else syntax, like this:<p><pre><code>  const Animal = union(enum) {\n      cat: Cat,\n      dog: Dog,\n\n      pub fn make_noise(self: Animal) void {\n          switch (self) {\n              inline else =&gt; |impl| impl.make_noise(),\n          }\n      }\n  };</code></pre>",
+    "time": 1738445324,
+    "type": "comment"
+  },
+  "42900319": {
+    "by": "mayoff",
+    "id": 42900319,
+    "parent": 42898225,
+    "text": "Swift does that. <a href=\"https:&#x2F;&#x2F;github.com&#x2F;swiftlang&#x2F;swift-evolution&#x2F;blob&#x2F;main&#x2F;proposals&#x2F;0460-specialized.md\">https:&#x2F;&#x2F;github.com&#x2F;swiftlang&#x2F;swift-evolution&#x2F;blob&#x2F;main&#x2F;propo...</a>",
+    "time": 1738432165,
+    "type": "comment"
+  },
+  "42897555": {
+    "by": "debugnik",
+    "id": 42897555,
+    "parent": 42897386,
+    "text": "<p><pre><code>    -void (*signal(int sig, void (*func)(int)))(int);\n    +typeof(void (int)) *signal(int sig, typeof(void (int)) *func);\n</code></pre>\nMuch better honestly. The original took me a few reads to understand, until I noticed the outer (int) is part of the return type.",
+    "time": 1738408617,
+    "type": "comment"
+  },
+  "42900168": {
+    "by": "caspper69",
+    "id": 42900168,
+    "parent": 42899793,
+    "text": "I&#x27;m not going to attempt to speak for java, but at least in C#, it supports virtual static methods in interfaces, including generics.<p>So, as I stated, you would use the interface keyword.<p><pre><code>  public interface IFromString&lt;T&gt;\n  {\n      static abstract T FromString(string value);\n  }\n\n  public struct MyHasFromString : IFromString&lt;MyHasFromString&gt;\n  {\n      public string Text = &quot;&quot;;\n\n      public MyHasFromString(string value) \n      {\n          Text = value;\n      }\n\n      public static MyHasFromString FromString(string value)\n          =&gt; return new MyHasFromString(value);\n\n      public override string ToString() =&gt; Text;\n  }</code></pre>",
+    "time": 1738431301,
+    "type": "comment"
+  },
+  "42913344": {
+    "by": "metaltyphoon",
+    "id": 42913344,
+    "parent": 42909295,
+    "text": "Rust has sane debug printing and doesn\u2019t have to allow everything to be public. Opaque types are a thing in C for these reasons. You don\u2019t want users of your code to depend on how it works internally.",
+    "time": 1738541963,
+    "type": "comment"
+  },
+  "42906934": {
+    "by": "josephg",
+    "id": 42906934,
+    "kids": [
+      42913764
+    ],
+    "parent": 42904028,
+    "text": "Nice! It&#x27;d be fun to see a comparison in rust if anyone is keen. - Both code and resulting performance.",
+    "time": 1738482391,
+    "type": "comment"
+  },
+  "42906098": {
+    "by": "josephg",
+    "id": 42906098,
+    "kids": [
+      42906778
+    ],
+    "parent": 42904801,
+    "text": "Oh go on then - how do you make a zig interface that has equivalent behaviour to a rust trait? I want something that has a documented interface, default function implementations, can be stored in other structs, and allows both monomorphization and dynamic dispatch.<p>If the authors of the zig standard library can&#x27;t do it, I assume its impossible. And hence this article talking about 3 different definitions of a &quot;writer&quot; appearing in the standard library, each trying to make up for shortcomings of the others. You have anytype, AnyWriter and GenericWriter. All with weird and complex tradeoffs and interactions. Not only do people need to learn 3 different interfaces, they also need to figure out how to convert from one kind of writer to another!<p>I talked to Rob Pike, back before Go hit version 1.0. I told him I really thought he should have not only enums, but parametric enums in Go. Of course, he disagreed. He said enums don&#x27;t add enough value. Honestly I&#x27;m not sure if he&#x27;d ever used a language with parametric enums - and he didn&#x27;t understand their value. Having used typescript, and now rust and swift, going back to C or Go and needing to build my own enums out of union structs and so on is awful. It feels like I&#x27;m trying to build a house using a rock and a piece of flint.<p>I see rust&#x27;s trait system as just like that. What a pity that Zig doesn&#x27;t have something similar. To me, traits seem like an obvious thing to copy into the language.",
+    "time": 1738473418,
+    "type": "comment"
+  },
+  "42904452": {
+    "by": "2c2c2c",
+    "id": 42904452,
+    "parent": 42902547,
+    "text": "iirc there&#x27;s multiple idioms that are used in different cases. i recall a nice github that laid them all out with use cases but I can&#x27;t find it",
+    "time": 1738458333,
+    "type": "comment"
+  },
+  "42913764": {
+    "by": "josephg",
+    "id": 42913764,
+    "parent": 42906934,
+    "text": "I was curious, so I ran your zig version myself and ported it to rust[1].<p>I think you forgot to run your benchmark in release mode. In debug mode, I get similar results to you. But in release mode, it runs ~5x faster than you reported:<p><pre><code>    genericWriter        - 4035.47ns per iterations\n    appendSlice          - 4026.41ns per iterations\n    appendSliceOptimized - 2884.84ns per iterations\n</code></pre>\nI bet the first two implementations are emitting identical code. But appendSliceOptimized is clearly much more efficient.<p>For some reason, rust is about twice as fast as zig in this test:<p><pre><code>    generic_writer          time:   [1.8812 \u00b5s 1.8837 \u00b5s 1.8870 \u00b5s]\n    append_slice            time:   [2.0019 \u00b5s 2.0065 \u00b5s 2.0126 \u00b5s]\n    append_slice_raw        time:   [1.6932 \u00b5s 1.7041 \u00b5s 1.7182 \u00b5s]\n</code></pre>\n(1\u00b5s = 1000ns)<p>[1] <a href=\"https:&#x2F;&#x2F;gist.github.com&#x2F;josephg&#x2F;e2dd6e7baf0a764a21bd724f8a2e411b\" rel=\"nofollow\">https:&#x2F;&#x2F;gist.github.com&#x2F;josephg&#x2F;e2dd6e7baf0a764a21bd724f8a2e...</a><p>Tests running on linux 6.8.0, CPU: Ryzen 7950x. zig v0.13 &#x2F; rust v1.84.1.<p>Zig command: zig build --release=fast -Dtarget=native run<p>Rust command: RUSTFLAGS=&#x27;-C target-cpu=native&#x27; cargo run --release -- --bench",
+    "time": 1738545016,
+    "type": "comment"
+  },
+  "42906778": {
+    "by": "hansvm",
+    "id": 42906778,
+    "kids": [
+      42906929
+    ],
+    "parent": 42906098,
+    "text": "It&#x27;d be a bit gnarly, but somebody could absolutely write a utility capable of providing those features in the userspace of the language:<p>1. Documented Interface: Documentation would be a struct with the desired function declarations (combined with some type-checking, I spit-balled an idea for that recently [0]).<p>2. Default Function Implementations: The exact tool you&#x27;ll use will vary since the language hasn&#x27;t hit 1.0, but a `pub usingnamespace FakeInheritanceFooBarBaz(TheTrait, @This());` could have the desired effect.<p>3. Stored in other structs: Rust doesn&#x27;t even really give you this. It has syntactic sugar to make the dynamic case easier, and it has the ability to store concrete implementations. For the latter, Zig just works. For the former, you want something that automagically wraps any trait-conforming object in a dynamic pointer-based structure. That&#x27;s a weak point in the language since the metaprogramming facilities for creating functions and for creating objects with decls aren&#x27;t very solid (that will get fixed by 1.0). You could make do for now by using comptime fields instead of decls in the wrapper logic that generates this thing (think `foo: fn (A) B` instead of `fn foo(A) B {}`), and that generation code would have to handle different argument counts by hand.<p>4. Monomorphization: You&#x27;d get that for free, since this is just ordinary comptime duck-typing.<p>5. Dynamic (runtime dispatch: This is really identical to the work for (3).<p>[0] <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=42899354\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=42899354</a>",
+    "time": 1738480661,
+    "type": "comment"
+  },
+  "42906929": {
+    "by": "josephg",
+    "id": 42906929,
+    "kids": [
+      42910852
+    ],
+    "parent": 42906778,
+    "text": "I followed 80% of what you&#x27;ve said, but not all of it. I&#x27;d love to read a sketch of this in code.<p>How would you clean up Writer in std?",
+    "time": 1738482333,
+    "type": "comment"
+  },
+  "42910852": {
+    "by": "hansvm",
+    "id": 42910852,
+    "kids": [
+      42914613
+    ],
+    "parent": 42906929,
+    "text": "I&#x27;ll try to put together a PoC a little later. I won&#x27;t have time till at least this evening though, maybe later.",
+    "time": 1738523059,
+    "type": "comment"
+  },
+  "42914613": {
+    "by": "hansvm",
+    "id": 42914613,
+    "kids": [
+      42917123
+    ],
+    "parent": 42910852,
+    "text": "It&#x27;s a very nontrivial amount of code to make the library that provides all of those features, even worse to do it well. Here&#x27;s a PoC for one of them [0] (default implementations).<p>The broad theme is that other languages use keywords for traits or subclasses or whatever. In Zig, you can define libraries using the language&#x27;s metapgrogramming facilities that do the same thing (or similar things).<p>Zig doesn&#x27;t have a complete metaprogramming story yet either, which makes it harder (no custom types with custom decls, can&#x27;t create a function dynamically, ...), but there are still a few options for creating something that looks like an interface.<p>In my mind, all the obvious solutions have something like a &quot;template&quot; and utilities that operate on that template. The template serves as documentation and also a hint to the LSP. Its exact semantics aren&#x27;t important; they just have to match however that library decides the implementation should look.<p>[0] <a href=\"https:&#x2F;&#x2F;github.com&#x2F;hmusgrave&#x2F;zinter\">https:&#x2F;&#x2F;github.com&#x2F;hmusgrave&#x2F;zinter</a>",
+    "time": 1738553431,
+    "type": "comment"
+  },
+  "42917123": {
+    "by": "josephg",
+    "id": 42917123,
+    "kids": [
+      42923014
+    ],
+    "parent": 42914613,
+    "text": "Awesome! Nice work. I\u2019m still astounded by what you can pull off with comptime.",
+    "time": 1738581626,
+    "type": "comment"
+  },
+  "42923014": {
+    "by": "hansvm",
+    "id": 42923014,
+    "parent": 42917123,
+    "text": "Comptime is amazing. It&#x27;s a new language, but I&#x27;m excited. I got my team excited too, for some fantastic benefits at work.",
+    "time": 1738616325,
+    "type": "comment"
+  }
+}
